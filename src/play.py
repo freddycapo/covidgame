@@ -27,8 +27,11 @@ class Player():
         self.heigth=heigth
         self.vel=10
         self.isJump=False
-        self.jumpcount=10
+        self.jumpLimit=10
+        self.jumpcount=self.jumpLimit
         self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
+        self.coeff1=2
+        self.coeff2=0.5
 
     def jump(self):
         if not(self.isJump):
@@ -37,16 +40,16 @@ class Player():
                 self.walkcount=0
 
         else:
-            if self.jumpcount>= -10:
+            if self.jumpcount>= -(self.jumpLimit):
                 neg=1
                 if self.jumpcount<0:
                     neg= -1
-                self.y -= self.jumpcount ** 2 *0.5 *neg
+                self.y -= self.jumpcount ** self.coeff1 *self.coeff2 *neg
                 self.jumpcount -=1
             
             else:
                 self.isJump=False
-                self.jumpcount=10
+                self.jumpcount=self.jumpLimit
 
     def move(self):
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
