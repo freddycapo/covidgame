@@ -69,45 +69,38 @@ class Player():
         #pygame.draw.rect(win,(255,0,0),self.hitbox,1)
 
 
-class Mask():
+class FallingObject():
     def __init__(self,x,y,width,heigth):
         self.x=x
         self.y=y
         self.width=width
         self.heigth=heigth
-        self.vel=7
         self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
-    
+
     def move(self):
         if self.y<heigth+self.heigth:
             self.y+=self.vel
         else:
             self.y=0
-        
+
     def draw(self,win):
         self.hitbox=pygame.Rect(self.x+15,self.y+20,self.width-30,self.heigth-30)
-        win.blit(pygame.transform.scale(mask_sprite,(self.width,self.heigth)),(self.x,self.y))
-        #pygame.draw.rect(win,(255,0,0),self.hitbox,1)
+        win.blit(pygame.transform.scale(self.sprite,(self.width,self.heigth)),(self.x,self.y))
 
-class Virus():
-    def __init__(self,x,y,width,heigth):
-        self.x=x
-        self.y=y
-        self.width=width
-        self.heigth=heigth
-        self.vel=10
-        self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
-    
-    def move(self):
-        if self.y<heigth+self.heigth:
-            self.y+=self.vel
-        else:
-            self.y=0
-        
-    def draw(self,win):
-        self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
-        win.blit(pygame.transform.scale(virus_sprite,(self.width,self.heigth)),(self.x,self.y))
-        #pygame.draw.rect(win,(255,0,0),self.hitbox,1)
+
+class Mask(FallingObject):
+    def __init__(self, x, y, width, heigth,vel,sprite):
+        super().__init__(x, y, width, heigth)
+        self.vel=vel
+        self.sprite=sprite
+    pass
+
+class Virus(FallingObject):
+    def __init__(self, x, y, width, heigth,vel,sprite):
+        super().__init__(x, y, width, heigth)
+        self.vel=vel
+        self.sprite=sprite
+    pass
 
 def message_box(subject, content):
     root = tk.Tk()
@@ -126,6 +119,9 @@ viruses=[]
 score=0
 n_virus=5
 
+vel_mask=7
+vel_virus=10
+
 run=True
 while run: 
     Clock.tick(30)
@@ -136,7 +132,12 @@ while run:
     star.draw(window)
     
     if len(masks)<=0:
-        masks.append(Mask(random.randint(0,width-75),-10,75,75))
+        masks.append(Mask(random.randint(0,width-75),
+                            -10,
+                            75,
+                            75,
+                            vel_mask,
+                            mask_sprite))
 
     else:
         mask=masks[0]
@@ -150,7 +151,12 @@ while run:
             masks.remove(mask)
 
     if len(viruses)<=n_virus:
-        viruses.append(Virus(random.randint(0,width-75),random.randint(-300,-10),35,35))
+        viruses.append(Virus(random.randint(0,width-75),
+                            random.randint(-300,-10),
+                            35,
+                            35,
+                            vel_virus,
+                            virus_sprite))
     else:
         for virus in viruses:
             virus.move()
@@ -179,7 +185,6 @@ while run:
     else:
         n_virus=10
 
-
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             run=False
@@ -190,4 +195,4 @@ while run:
     pygame.display.update()
     window.blit(pygame.transform.scale(background,(width,heigth)),(0,0))
 
-pygame.quit()   
+pygame.quit()
