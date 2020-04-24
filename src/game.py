@@ -3,6 +3,8 @@ import random
 import tkinter as tk
 from pygame import *
 from tkinter import messagebox
+from Player import Player
+from FallingObject import FallingObject
 
 pygame.init()
 
@@ -19,85 +21,17 @@ Clock=pygame.time.Clock()
 
 font = pygame.font.SysFont("comicsans",30,True)
 
-class Player():
-    def __init__ (self,x,y,width,heigth):
-        self.x=x
-        self.y=y
-        self.width=width
-        self.heigth=heigth
-        self.vel=10
-        self.isJump=False
-        self.jumpLimit=10
-        self.jumpcount=self.jumpLimit
-        self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
-        self.coeff1=2
-        self.coeff2=0.5
-
-    def jump(self):
-        if not(self.isJump):
-            if keys[pygame.K_SPACE]:
-                self.isJump=True
-                self.walkcount=0
-
-        else:
-            if self.jumpcount>= -(self.jumpLimit):
-                neg=1
-                if self.jumpcount<0:
-                    neg= -1
-                self.y -= self.jumpcount ** self.coeff1 *self.coeff2 *neg
-                self.jumpcount -=1
-            
-            else:
-                self.isJump=False
-                self.jumpcount=self.jumpLimit
-
-    def move(self):
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            if self.x<=width-self.vel-self.width:
-                self.x+=self.vel
-        
-        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            if self.x>=0+self.vel:
-                self.x-=self.vel
-
-        else:
-            pass
-
-    def draw(self,win):
-        self.hitbox=pygame.Rect(self.x+5,self.y+20,self.width-10,self.heigth-30)
-        win.blit(pygame.transform.scale(sprite,(self.width,self.heigth)),(self.x,self.y))
-        #pygame.draw.rect(win,(255,0,0),self.hitbox,1)
-
-
-class FallingObject():
-    def __init__(self,x,y,width,heigth):
-        self.x=x
-        self.y=y
-        self.width=width
-        self.heigth=heigth
-        self.hitbox=pygame.Rect(self.x,self.y,self.width,self.heigth)
-
-    def move(self):
-        if self.y<heigth+self.heigth:
-            self.y+=self.vel
-        else:
-            self.y=0
-
-    def draw(self,win):
-        self.hitbox=pygame.Rect(self.x+15,self.y+20,self.width-30,self.heigth-30)
-        win.blit(pygame.transform.scale(self.sprite,(self.width,self.heigth)),(self.x,self.y))
-
 
 class Mask(FallingObject):
-    def __init__(self, x, y, width, heigth,vel,sprite):
-        super().__init__(x, y, width, heigth)
+    def __init__(self, x, y, width, heigth,screen_heigth,vel,sprite):
+        super().__init__(x, y, width, heigth,screen_heigth)
         self.vel=vel
         self.sprite=sprite
     pass
 
 class Virus(FallingObject):
-    def __init__(self, x, y, width, heigth,vel,sprite):
-        super().__init__(x, y, width, heigth)
+    def __init__(self, x, y, width, heigth,screen_heigth,vel,sprite):
+        super().__init__(x, y, width, heigth,screen_heigth)
         self.vel=vel
         self.sprite=sprite
     pass
@@ -112,7 +46,7 @@ def message_box(subject, content):
     except:
         pass
 
-star=Player(width//2,heigth*0.85,75,75)
+star=Player(width//2,heigth*0.85,75,75,width,heigth,sprite)
 masks=[]
 viruses=[]
 
@@ -126,7 +60,6 @@ run=True
 while run: 
     Clock.tick(30)
 
-    keys=pygame.key.get_pressed()
     star.move()
     star.jump()
     star.draw(window)
