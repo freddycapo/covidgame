@@ -1,6 +1,6 @@
 import cx_Freeze
 
-executables = [cx_Freeze.Executable("src/play.py")]
+executables = [cx_Freeze.Executable("src/game.py")]
 
 cx_Freeze.setup(
     name="Corona Videogame",

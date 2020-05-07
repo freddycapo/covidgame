@@ -4,7 +4,8 @@ import tkinter as tk
 from pygame import *
 from tkinter import messagebox
 from Player import Player
-from FallingObject import FallingObject
+from Mask import Mask
+from Virus import Virus
 
 pygame.init()
 
@@ -20,21 +21,6 @@ virus_sprite=pygame.image.load("images/virus.png")
 Clock=pygame.time.Clock()
 
 font = pygame.font.SysFont("comicsans",30,True)
-
-
-class Mask(FallingObject):
-    def __init__(self, x, y, width, heigth,screen_heigth,vel,sprite):
-        super().__init__(x, y, width, heigth,screen_heigth)
-        self.vel=vel
-        self.sprite=sprite
-    pass
-
-class Virus(FallingObject):
-    def __init__(self, x, y, width, heigth,screen_heigth,vel,sprite):
-        super().__init__(x, y, width, heigth,screen_heigth)
-        self.vel=vel
-        self.sprite=sprite
-    pass
 
 def message_box(subject, content):
     root = tk.Tk()
